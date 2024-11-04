@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.dicoding.picodiploma.mycamera.OverlayView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
