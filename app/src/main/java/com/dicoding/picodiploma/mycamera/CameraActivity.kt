@@ -84,7 +84,7 @@ class CameraActivity : AppCompatActivity() {
                 .build()
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setResolutionSelector(resolutionSelector)
-//                .setTargetRotation(binding.viewFinder.display.rotation)
+                .setTargetRotation(binding.overlay.display.rotation)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
                 .build()
@@ -94,7 +94,7 @@ class CameraActivity : AppCompatActivity() {
 
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
-//                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                it.setSurfaceProvider(binding.overlay.surfaceProvider)
             }
             try {
                 cameraProvider.unbindAll()
