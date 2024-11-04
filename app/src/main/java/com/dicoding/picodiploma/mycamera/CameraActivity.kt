@@ -49,28 +49,28 @@ class CameraActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onResults(results: MutableList<Detection>?, inferenceTime: Long) {
+                override fun onResults(
+                    results: MutableList<Detection>?,
+                    inferenceTime: Long,
+                    imageHeight: Int,
+                    imageWidth: Int
+                ) {
                     runOnUiThread {
-                        results?.let { it ->
+                        results?.let {
                             if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {
                                 println(it)
-
-                                val builder = StringBuilder()
-                                for (result in results) {
-                                    val displayResult =
-                                        "${result.categories[0].label} " + NumberFormat.getPercentInstance()
-                                            .format(result.categories[0].score).trim()
-                                    builder.append("$displayResult \n")
-                                }
-
-                                binding.tvResult.text = builder.toString()
-                                binding.tvResult.visibility = View.VISIBLE
+                                binding.overlay.setResults(
+                                    results, imageHeight, imageWidth
+                                )
                                 binding.tvInferenceTime.text = "$inferenceTime ms"
                             } else {
-                                binding.tvResult.text = ""
+                                binding.overlay.clear()
                                 binding.tvInferenceTime.text = ""
                             }
                         }
+
+                        // Force a redraw
+                        binding.overlay.invalidate()
                     }
                 }
             }
@@ -84,7 +84,7 @@ class CameraActivity : AppCompatActivity() {
                 .build()
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setResolutionSelector(resolutionSelector)
-                .setTargetRotation(binding.viewFinder.display.rotation)
+//                .setTargetRotation(binding.viewFinder.display.rotation)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
                 .build()
@@ -94,7 +94,7 @@ class CameraActivity : AppCompatActivity() {
 
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+//                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
             }
             try {
                 cameraProvider.unbindAll()
@@ -127,7 +127,7 @@ class CameraActivity : AppCompatActivity() {
         }
         supportActionBar?.hide()
     }
-
+//
     companion object {
         private const val TAG = "CameraActivity"
         const val EXTRA_CAMERAX_IMAGE = "CameraX Image"
